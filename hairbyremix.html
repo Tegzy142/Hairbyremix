@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HairByRemix Beauty Lounge Abuja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --gold: #b8956a;
+      --gold-light: #d4b896;
+      --gold-pale: #f5ede0;
+      --cream: #faf8f5;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Playfair Display', Georgia, serif; background: #fff; color: #1a1a1a; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #f5f5f5; }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+    .sans { font-family: 'DM Sans', sans-serif; }
+    img { display: block; }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes heroZoom  { from { transform: scale(1.06); } to { transform: scale(1); } }
+    @keyframes fadeInUp  { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatBob  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+    @keyframes scrollPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ─── NAV ─── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 60px;
+      transition: background 0.4s, padding 0.4s, border 0.4s, backdrop-filter 0.4s;
+    }
+    #navbar.scrolled {
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid #ece8e0;
+      padding-top: 14px; padding-bottom: 14px;
+    }
+    .nav-link {
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; background: none; border: none;
+      padding: 4px 0; text-decoration: none; transition: color 0.25s;
+    }
+    .light { color: rgba(255,255,255,0.85); }
+    .light:hover { color: #e8c98a; }
+    .dark  { color: #555; }
+    .dark:hover  { color: var(--gold); }
+
+    /* ─── BUTTONS ─── */
+    .btn-gold {
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      background: var(--gold); color: #fff;
+      padding: 14px 38px; border: none; cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+      display: inline-block; text-decoration: none;
+    }
+    .btn-gold:hover { background: #9e7c56; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(184,149,106,0.4); }
+    .btn-outline {
+      font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      background: transparent; color: #fff;
+      padding: 13px 38px; border: 1.5px solid rgba(255,255,255,0.65);
+      cursor: pointer; transition: all 0.3s; display: inline-block;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.12); }
+
+    /* ─── EYEBROW / DIVIDER ─── */
+    .eyebrow {
+      font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500;
+      letter-spacing: 4px; text-transform: uppercase; color: var(--gold);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
+    }
+    .eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); flex-shrink: 0; }
+    .eyebrow.center { justify-content: center; }
+    .divider { width: 50px; height: 2px; background: var(--gold); margin: 18px 0; }
+    .divider.center { margin: 18px auto; }
+
+    /* ─── HERO ─── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      /* Deep fallback colour shown instantly while image loads */
+      background: #1a1008;
+    }
+    #hero-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      animation: heroZoom 9s ease forwards;
+    }
+    #hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, rgba(8,4,1,0.88) 48%, rgba(8,4,1,0.30));
+    }
+    #hero-accent {
+      position: absolute; left: 60px; top: 20%; bottom: 20%;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, rgba(184,149,106,0.55), transparent);
+    }
+    #hero-content {
+      position: relative; z-index: 2;
+      padding: 0 80px; max-width: 860px;
+      /* Always visible — no opacity trick */
+      animation: fadeInUp 0.9s ease 0.2s both;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── SERVICE CARD ─── */
+    .svc-card {
+      background: #fff; border: 1px solid #ece8e0; padding: 28px 24px;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .svc-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--gold); transition: width 0.35s; }
+    .svc-card:hover { border-color: var(--gold-light); box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-4px); }
+    .svc-card:hover::after { width: 100%; }
+
+    /* ─── GALLERY ─── */
+    .gal-item { position: relative; overflow: hidden; cursor: pointer; background: #f0ebe3; }
+    .gal-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s ease; }
+    .gal-item:hover img { transform: scale(1.07); }
+    .gal-overlay {
+      position: absolute; inset: 0;
+      background: rgba(16,9,2,0.5);
+      display: flex; align-items: flex-end; padding: 20px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gal-item:hover .gal-overlay { opacity: 1; }
+
+    /* ─── FORM ─── */
+    .form-field {
+      font-family: 'DM Sans', sans-serif; font-size: 13px;
+      width: 100%; padding: 13px 16px;
+      border: 1px solid #ddd; background: #fafafa;
+      color: #1a1a1a; outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      -webkit-appearance: none; border-radius: 0;
+    }
+    .form-field:focus { border-color: var(--gold); background: #fff; }
+
+    /* ─── CATEGORY FILTER ─── */
+    .cat-btn {
+      font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 8px 18px; border: 1px solid #ddd;
+      background: transparent; color: #888; cursor: pointer; transition: all 0.25s;
+    }
+    .cat-btn:hover, .cat-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+    /* ─── ICON CIRCLE ─── */
+    .icon-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold-pale);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* ─── FLOAT BADGE ─── */
+    .float-badge { animation: floatBob 4s ease-in-out infinite; }
+
+    /* ─── MOBILE MENU ─── */
+    #mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: #fff; flex-direction: column;
+      align-items: center; justify-content: center; gap: 36px;
+    }
+    #mobile-menu.open { display: flex; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .ham-ln { display: block; width: 24px; height: 1.5px; background: #fff; transition: all 0.3s; }
+    #navbar.scrolled .ham-ln { background: #333; }
+
+    /* ─── SCROLL INDICATOR ─── */
+    #scroll-ind { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; animation: scrollPulse 2s ease-in-out infinite; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .desktop-links { display: none !important; }
+      .hamburger { display: flex !important; }
+      #navbar { padding: 16px 24px !important; }
+    }
+    @media (max-width: 768px) {
+      #hero-content { padding: 0 28px !important; }
+      #hero-accent { display: none; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr !important; }
+      .svc-grid { grid-template-columns: 1fr 1fr !important; }
+      .gal-grid { grid-template-columns: 1fr 1fr !important; grid-auto-rows: 200px !important; }
+      .gal-tall { grid-row: span 1 !important; }
+      .form-row { flex-direction: column !important; }
+      .hero-title { font-size: clamp(2.6rem, 11vw, 5rem) !important; }
+      .sec { padding: 80px 24px !important; }
+      .stat-grid { grid-template-columns: 1fr 1fr !important; }
+      .footer-flex { flex-direction: column; gap: 24px; }
+    }
+    @media (max-width: 480px) {
+      .svc-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav id="navbar">
+  <div onclick="goTo('hero')" style="cursor:pointer">
+    <div id="logo-text" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:#fff;letter-spacing:.5px;transition:color .4s">HairByRemix</div>
+    <div class="sans" style="font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-top:2px">Beauty Lounge</div>
+  </div>
+
+  <div class="desktop-links" style="display:flex;align-items:center;gap:36px">
+    <a class="nav-link light" onclick="goTo('about')"    href="#">About</a>
+    <a class="nav-link light" onclick="goTo('services')" href="#">Services</a>
+    <a class="nav-link light" onclick="goTo('gallery')"  href="#">Gallery</a>
+    <a class="nav-link light" onclick="goTo('book')"     href="#">Book</a>
+    <a class="nav-link light" onclick="goTo('contact')"  href="#">Contact</a>
+    <button class="btn-gold" onclick="goTo('book')" style="padding:10px 22px;font-size:10px">Book Now</button>
+  </div>
+
+  <button class="hamburger" id="ham-btn" onclick="toggleMenu()">
+    <span class="ham-ln" id="hl1"></span>
+    <span class="ham-ln" id="hl2"></span>
+    <span class="ham-ln" id="hl3"></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <a class="nav-link dark" onclick="closeMobileMenu();goTo('about')"    href="#">About</a>
+  <a class="nav-link dark" onclick="closeMobileMenu();goTo('services')" href="#">Services</a>
+  <a class="nav-link dark" onclick="closeMobileMenu();goTo('gallery')"  href="#">Gallery</a>
+  <a class="nav-link dark" onclick="closeMobileMenu();goTo('book')"     href="#">Book</a>
+  <a class="nav-link dark" onclick="closeMobileMenu();goTo('contact')"  href="#">Contact</a>
+  <button class="btn-gold" onclick="closeMobileMenu();goTo('book')">Book Appointment</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section id="hero">
+
+  <!-- Background image — picsum gives a guaranteed photo every time -->
+  <img
+    id="hero-bg"
+    src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=1800&q=85&fit=crop&crop=top"
+    alt=""
+    aria-hidden="true"
+  />
+
+  <div id="hero-overlay"></div>
+  <div id="hero-accent"></div>
+
+  <!-- Hero content — ALWAYS visible, no onload dependency -->
+  <div id="hero-content">
+    <div class="eyebrow" style="color:#d4b896;margin-bottom:28px">Wuse 2, Abuja — Nigeria</div>
+
+    <h1 class="hero-title" style="font-family:'Playfair Display',serif;font-size:clamp(3.2rem,7.5vw,6.5rem);font-weight:500;line-height:1.06;color:#fff;margin-bottom:20px">
+      HairByRemix<br><em>Beauty Lounge</em>
+    </h1>
+
+    <p class="sans" style="font-size:15px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:52px;max-width:500px;line-height:1.9">
+      Premium wig styling and installation in the heart of Abuja.<br>Where every detail is crafted to perfection.
+    </p>
+
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <button class="btn-gold" onclick="goTo('book')">Book Appointment</button>
+      <button class="btn-outline" onclick="goTo('services')">View Services</button>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div id="scroll-ind">
+    <div class="sans" style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#d4b896">Scroll</div>
+    <div style="width:1px;height:44px;background:linear-gradient(180deg,var(--gold),transparent)"></div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ABOUT
+══════════════════════════════════════ -->
+<section id="about" class="sec" style="padding:120px 60px">
+  <div style="max-width:1200px;margin:0 auto">
+
+    <div class="reveal about-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+
+      <div>
+        <div class="eyebrow">Our Story</div>
+        <h2 style="font-size:clamp(2rem,4vw,3.4rem);font-weight:500;line-height:1.15;margin-bottom:6px">
+          Where Beauty<br><em style="color:var(--gold)">Meets Artistry</em>
+        </h2>
+        <div class="divider"></div>
+        <p class="sans" style="font-size:15px;font-weight:300;line-height:1.95;color:#555;margin-bottom:20px">
+          HairByRemix Beauty Lounge is Abuja's destination for elevated hair experiences. We are a professional beauty lounge specializing in wig installation, wig revamping, precision hair coloring, and premium hairstyling for the modern woman.
+        </p>
+        <p class="sans" style="font-size:15px;font-weight:300;line-height:1.95;color:#555;margin-bottom:44px">
+          From natural glueless installs to full bridal transformations, our skilled stylists blend technical mastery with a genuine passion for making you feel confident, radiant, and beautifully yourself — every single time.
+        </p>
+        <button class="btn-gold" onclick="goTo('book')">Reserve Your Seat</button>
+      </div>
+
+      <div style="position:relative">
+        <img
+          src="images\Classy+Sassy ✨.jpg"
+          alt="Professional hair styling session at HairByRemix"
+          loading="lazy"
+          style="width:100%;height:520px;object-fit:cover"
+          onerror="this.src='https://picsum.photos/seed/salon/900/520'"
+        />
+        <div class="float-badge" style="position:absolute;bottom:-24px;right:-24px;background:var(--gold);padding:28px 32px;min-width:130px;text-align:center">
+          <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:500;color:#fff;line-height:1">5+</div>
+          <div class="sans" style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.85);margin-top:6px">Years<br>Experience</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-grid reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:100px">
+      <div style="text-align:center;padding:40px 20px;border-top:2px solid var(--gold)">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:500">500+</div>
+        <div class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;margin-top:8px">Happy Clients</div>
+      </div>
+      <div style="text-align:center;padding:40px 20px;border-top:2px solid var(--gold)">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:500">15+</div>
+        <div class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;margin-top:8px">Services Offered</div>
+      </div>
+      <div style="text-align:center;padding:40px 20px;border-top:2px solid var(--gold)">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:500">100%</div>
+        <div class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;margin-top:8px">Satisfaction Rate</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SERVICES
+══════════════════════════════════════ -->
+<section id="services" class="sec" style="padding:120px 60px;background:var(--cream)">
+  <div style="max-width:1200px;margin:0 auto">
+
+    <div class="reveal" style="text-align:center;margin-bottom:56px">
+      <div class="eyebrow center">What We Offer</div>
+      <h2 style="font-size:clamp(2rem,4vw,3.4rem);font-weight:500">Our <em style="color:var(--gold)">Services</em></h2>
+      <div class="divider center"></div>
+      <p class="sans" style="font-size:14px;color:#888;max-width:420px;margin:0 auto 36px;line-height:1.85">Expert services tailored to bring your hair vision to life</p>
+      <div id="cat-filters" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center"></div>
+    </div>
+
+    <div id="svc-grid" class="svc-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"></div>
+
+    <div style="text-align:center;margin-top:56px">
+      <button class="btn-gold" onclick="goTo('book')">Book a Service</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     GALLERY
+══════════════════════════════════════ -->
+<section id="gallery" class="sec" style="padding:120px 60px">
+  <div style="max-width:1200px;margin:0 auto">
+
+    <div class="reveal" style="text-align:center;margin-bottom:56px">
+      <div class="eyebrow center">Portfolio</div>
+      <h2 style="font-size:clamp(2rem,4vw,3.4rem);font-weight:500">Our <em style="color:var(--gold)">Work</em></h2>
+      <div class="divider center"></div>
+      <p class="sans" style="font-size:14px;color:#888;max-width:420px;margin:0 auto;line-height:1.85">A glimpse into the transformations we create every day</p>
+    </div>
+
+    <!-- 
+      Gallery grid: 3 columns, 2 rows = 6 slots
+      First item spans 2 rows (tall)
+    -->
+    <div class="gal-grid reveal" style="display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:280px;gap:12px">
+
+      <div class="gal-item gal-tall" style="grid-row:span 2">
+        <img src="https://i.pinimg.com/1200x/be/c9/61/bec96148f1d39e0f0b5755d21cbf4fbc.jpg" alt="Frontal Installation" loading="lazy" onerror="this.parentNode.style.background='#e8ddd0'" />
+        <div class="gal-overlay"><span class="sans" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#fff">Frontal Installation</span></div>
+      </div>
+
+      <div class="gal-item">
+        <img src="https://i.pinimg.com/736x/bb/5c/46/bb5c465cdd373d1eed7fe136b4dba519.jpg" alt="Wig Styling" loading="lazy" onerror="this.parentNode.style.background='#e8ddd0'" />
+        <div class="gal-overlay"><span class="sans" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#fff">Wig Styling</span></div>
+      </div>
+
+      <div class="gal-item">
+        <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&q=80&fit=crop" alt="Curling" loading="lazy" onerror="this.parentNode.style.background='#e8ddd0'" />
+        <div class="gal-overlay"><span class="sans" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#fff">Curling</span></div>
+      </div>
+
+      <div class="gal-item">
+        <img src="https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=600&q=80&fit=crop" alt="Bridal Look" loading="lazy" onerror="this.parentNode.style.background='#e8ddd0'" />
+        <div class="gal-overlay"><span class="sans" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#fff">Bridal Look</span></div>
+      </div>
+
+      <div class="gal-item">
+        <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=600&q=80&fit=crop" alt="360 Install" loading="lazy" onerror="this.parentNode.style.background='#e8ddd0'" />
+        <div class="gal-overlay"><span class="sans" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#fff">360 Install</span></div>
+      </div>
+
+      <div class="gal-item">
+        <img src="https://images.unsplash.com/photo-1512690459411-b9245aed614b?w=600&q=80&fit=crop" alt="Color & Style" loading="lazy" onerror="this.parentNode.style.background='#e8ddd0'" />
+        <div class="gal-overlay"><span class="sans" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#fff">Color & Style</span></div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:48px">
+      <p class="sans" style="font-size:13px;color:#aaa">Visit our Instagram for more — <strong style="color:var(--gold)">@HairByRemix</strong></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     BOOKING
+══════════════════════════════════════ -->
+<section id="book" class="sec" style="padding:120px 60px;background:var(--cream)">
+  <div style="max-width:700px;margin:0 auto">
+
+    <div class="reveal" style="text-align:center;margin-bottom:56px">
+      <div class="eyebrow center">Reserve Your Seat</div>
+      <h2 style="font-size:clamp(2rem,4vw,3.4rem);font-weight:500">Book an <em style="color:var(--gold)">Appointment</em></h2>
+      <div class="divider center"></div>
+      <p class="sans" style="font-size:14px;color:#888;max-width:400px;margin:0 auto;line-height:1.85">Fill in your details and we will confirm your booking via WhatsApp</p>
+    </div>
+
+    <div class="reveal">
+
+      <!-- Form -->
+      <form id="booking-form" onsubmit="handleBooking(event)" style="background:#fff;padding:48px 40px;border:1px solid #ece8e0;display:flex;flex-direction:column;gap:20px">
+
+        <div class="form-row" style="display:flex;gap:16px">
+          <div style="flex:1">
+            <label class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px">Full Name</label>
+            <input class="form-field" id="f-name" type="text" placeholder="Your full name" required />
+          </div>
+          <div style="flex:1">
+            <label class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px">Phone Number</label>
+            <input class="form-field" id="f-phone" type="tel" placeholder="08XXXXXXXXX" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px">Select Service</label>
+          <select class="form-field" id="f-service" required>
+            <option value="">Choose a service...</option>
+            <option>Wig Revamping &amp; Styling — ₦3,500</option>
+            <option>Wig Curling — ₦2,500</option>
+            <option>Flat Iron Styling — ₦2,000</option>
+            <option>Regular Fixing — ₦2,000</option>
+            <option>Customized Closure Fixing — ₦3,000</option>
+            <option>Frontal Installation — ₦6,000</option>
+            <option>Hand Wigging — ₦6,000</option>
+            <option>Machine Wigging — ₦7,000</option>
+            <option>Installation &amp; Styling — ₦10,000</option>
+            <option>Wigging &amp; Installation — ₦15,000</option>
+            <option>Glueless Hand Wigging — ₦10,000</option>
+            <option>360 Installation — ₦15,000</option>
+            <option>Hair Coloring (Blonde) — ₦10,000</option>
+            <option>Hair Coloring (Other Colors) — ₦15,000</option>
+            <option>Bridal Installation &amp; Styling — ₦40,000</option>
+          </select>
+        </div>
+
+        <div class="form-row" style="display:flex;gap:16px">
+          <div style="flex:1">
+            <label class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px">Preferred Date</label>
+            <input class="form-field" id="f-date" type="date" required />
+          </div>
+          <div style="flex:1">
+            <label class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px">Preferred Time</label>
+            <select class="form-field" id="f-time" required>
+              <option value="">Select time slot...</option>
+              <option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+              <option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option>
+              <option>3:00 PM</option><option>4:00 PM</option><option>5:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="text-align:center;padding-top:8px">
+          <button type="submit" class="btn-gold" style="padding:16px 60px">Send via WhatsApp</button>
+          <p class="sans" style="font-size:11px;color:#bbb;margin-top:14px">You will be redirected to WhatsApp to complete your booking</p>
+        </div>
+      </form>
+
+      <!-- Success message -->
+      <div id="form-success" style="display:none;text-align:center;padding:70px 40px;border:1px solid #ece8e0;background:#fff">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;margin:0 auto 24px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#b8956a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 style="font-size:1.8rem;font-weight:500;margin-bottom:10px">Opening <em style="color:var(--gold)">WhatsApp</em></h3>
+        <p class="sans" style="font-size:14px;color:#888">Your booking details have been sent. We will confirm shortly!</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CONTACT
+══════════════════════════════════════ -->
+<section id="contact" class="sec" style="padding:120px 60px">
+  <div style="max-width:1200px;margin:0 auto">
+
+    <div class="reveal" style="text-align:center;margin-bottom:60px">
+      <div class="eyebrow center">Find Us</div>
+      <h2 style="font-size:clamp(2rem,4vw,3.4rem);font-weight:500">Visit the <em style="color:var(--gold)">Lounge</em></h2>
+      <div class="divider center"></div>
+    </div>
+
+    <div class="contact-grid reveal" style="display:grid;grid-template-columns:1fr 1.5fr;gap:64px;align-items:start">
+
+      <!-- Contact info -->
+      <div>
+        <div style="display:flex;gap:20px;align-items:flex-start;padding:28px 0;border-bottom:1px solid #f0ebe3">
+          <div class="icon-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8956a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s-7-7.5-7-12a7 7 0 0114 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Address</div>
+            <div class="sans" style="font-size:14px;font-weight:300;color:#444;line-height:1.85">Plot 527 Adetokunbo Ademola Crescent<br>Wuse 2, Abuja, Nigeria</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:20px;align-items:flex-start;padding:28px 0;border-bottom:1px solid #f0ebe3">
+          <div class="icon-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8956a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.1 1.18 2 2 0 012.1.1h3a2 2 0 012 1.72c.13.96.36 1.9.71 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.58 2.81.71A2 2 0 0122 16.92z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Phone</div>
+            <div class="sans" style="font-size:14px;font-weight:300;color:#444;line-height:1.85">08033489998</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:20px;align-items:flex-start;padding:28px 0;border-bottom:1px solid #f0ebe3">
+          <div class="icon-circle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8956a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <div class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Opening Hours</div>
+            <div class="sans" style="font-size:14px;font-weight:300;color:#444;line-height:1.85">
+              Monday – Saturday: 8:00 AM – 7:00 PM<br>Sunday: 10:00 AM – 5:00 PM
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-gold" onclick="window.open('https://wa.me/2348033489998','_blank')" style="margin-top:32px">
+          Chat on WhatsApp
+        </button>
+      </div>
+
+      <!-- Google Map -->
+      <div>
+        <div style="overflow:hidden;box-shadow:0 4px 28px rgba(0,0,0,0.1);line-height:0">
+          <iframe
+            src="https://maps.google.com/maps?q=Adetokunbo+Ademola+Crescent+Wuse+2+Abuja+Nigeria&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            width="100%"
+            height="450"
+            frameborder="0"
+            scrolling="no"
+            marginheight="0"
+            marginwidth="0"
+            allowfullscreen
+            loading="lazy"
+            title="HairByRemix Location"
+            style="display:block;border:0"
+          ></iframe>
+        </div>
+        <div style="margin-top:10px;text-align:right">
+          <a href="https://www.google.com/maps/search/Plot+527+Adetokunbo+Ademola+Crescent+Wuse+2+Abuja"
+             target="_blank"
+             class="sans"
+             style="font-size:11px;color:var(--gold);text-decoration:none;letter-spacing:1px;border-bottom:1px solid var(--gold-light);padding-bottom:2px">
+            Open in Google Maps
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer style="background:#100c07;padding:64px 60px 36px">
+  <div style="max-width:1200px;margin:0 auto">
+
+    <div class="footer-flex" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:28px;margin-bottom:44px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,0.07)">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#fff">HairByRemix</div>
+        <div class="sans" style="font-size:8px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-top:4px">Beauty Lounge Abuja</div>
+      </div>
+      <div style="display:flex;gap:32px;flex-wrap:wrap">
+        <a onclick="goTo('about')"    href="#" class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none" onmouseover="this.style.color='#b8956a'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">About</a>
+        <a onclick="goTo('services')" href="#" class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none" onmouseover="this.style.color='#b8956a'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Services</a>
+        <a onclick="goTo('gallery')"  href="#" class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none" onmouseover="this.style.color='#b8956a'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Gallery</a>
+        <a onclick="goTo('book')"     href="#" class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none" onmouseover="this.style.color='#b8956a'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Book</a>
+        <a onclick="goTo('contact')"  href="#" class="sans" style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);text-decoration:none" onmouseover="this.style.color='#b8956a'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Contact</a>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <p class="sans" style="font-size:11px;color:rgba(255,255,255,0.25)">© 2025 HairByRemix Beauty Lounge. All rights reserved.</p>
+      <p class="sans" style="font-size:11px;color:rgba(255,255,255,0.25)">Plot 527 Adetokunbo Ademola Crescent, Wuse 2, Abuja</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+
+  /* ─── Smooth scroll ─── */
+  function goTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    return false;
+  }
+
+  /* ─── Navbar: switch colours on scroll ─── */
+  const navbar   = document.getElementById('navbar');
+  const logoText = document.getElementById('logo-text');
+  const navLinks = document.querySelectorAll('.desktop-links .nav-link');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      navbar.classList.add('scrolled');
+      logoText.style.color = '#1a1a1a';
+      navLinks.forEach(l => { l.classList.replace('light', 'dark'); });
+    } else {
+      navbar.classList.remove('scrolled');
+      logoText.style.color = '#fff';
+      navLinks.forEach(l => { l.classList.replace('dark', 'light'); });
+    }
+  }, { passive: true });
+
+  /* ─── Mobile menu ─── */
+  let menuOpen = false;
+  function toggleMenu() {
+    menuOpen = !menuOpen;
+    document.getElementById('mobile-menu').classList.toggle('open', menuOpen);
+    document.getElementById('hl1').style.transform = menuOpen ? 'rotate(45deg) translate(4px,5px)'  : 'none';
+    document.getElementById('hl2').style.opacity   = menuOpen ? '0' : '1';
+    document.getElementById('hl3').style.transform = menuOpen ? 'rotate(-45deg) translate(4px,-5px)' : 'none';
+  }
+  function closeMobileMenu() { if (menuOpen) toggleMenu(); }
+
+  /* ─── Set date minimum ─── */
+  document.getElementById('f-date').min = new Date().toISOString().split('T')[0];
+
+  /* ─── Services data ─── */
+  const SERVICES = [
+    { name:'Wig Revamping & Styling',       price:'₦3,500',  cat:'Styling'      },
+    { name:'Wig Curling',                   price:'₦2,500',  cat:'Styling'      },
+    { name:'Flat Iron Styling',             price:'₦2,000',  cat:'Styling'      },
+    { name:'Regular Fixing',                price:'₦2,000',  cat:'Fixing'       },
+    { name:'Customized Closure Fixing',     price:'₦3,000',  cat:'Fixing'       },
+    { name:'Frontal Installation',          price:'₦6,000',  cat:'Installation' },
+    { name:'Hand Wigging',                  price:'₦6,000',  cat:'Wigging'      },
+    { name:'Machine Wigging',               price:'₦7,000',  cat:'Wigging'      },
+    { name:'Installation & Styling',        price:'₦10,000', cat:'Installation' },
+    { name:'Wigging & Installation',        price:'₦15,000', cat:'Wigging'      },
+    { name:'Glueless Hand Wigging',         price:'₦10,000', cat:'Wigging'      },
+    { name:'360 Installation',              price:'₦15,000', cat:'Installation' },
+    { name:'Hair Coloring (Blonde)',        price:'₦10,000', cat:'Color'        },
+    { name:'Hair Coloring (Other Colors)',  price:'₦15,000', cat:'Color'        },
+    { name:'Bridal Installation & Styling', price:'₦40,000', cat:'Bridal'       },
+  ];
+
+  const cats = ['All', ...new Set(SERVICES.map(s => s.cat))];
+  let activeCategory = 'All';
+
+  function renderFilters() {
+    document.getElementById('cat-filters').innerHTML = cats.map(c =>
+      `<button class="cat-btn${c === activeCategory ? ' active' : ''}" onclick="setCategory('${c}')">${c}</button>`
+    ).join('');
+  }
+
+  function renderServices() {
+    const list = activeCategory === 'All' ? SERVICES : SERVICES.filter(s => s.cat === activeCategory);
+    document.getElementById('svc-grid').innerHTML = list.map((s, i) => `
+      <div class="svc-card" style="animation:fadeInUp .5s ease ${i * 50}ms both">
+        <div class="sans" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">${s.cat}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.08rem;font-weight:400;margin-bottom:18px;line-height:1.4">${s.name}</div>
+        <div class="sans" style="font-size:1.2rem;font-weight:500;color:var(--gold)">${s.price}</div>
+      </div>
+    `).join('');
+  }
+
+  function setCategory(c) {
+    activeCategory = c;
+    renderFilters();
+    renderServices();
+  }
+
+  renderFilters();
+  renderServices();
+
+  /* ─── WhatsApp booking ─── */
+  function handleBooking(e) {
+    e.preventDefault();
+    const name    = document.getElementById('f-name').value.trim();
+    const phone   = document.getElementById('f-phone').value.trim();
+    const service = document.getElementById('f-service').value;
+    const date    = document.getElementById('f-date').value;
+    const time    = document.getElementById('f-time').value;
+
+    const msg = [
+      'Hello HairbyRemix Beauty Lounge! I would like to book an appointment.',
+      '',
+      'Name: ' + name,
+      'Phone: ' + phone,
+      'Service: ' + service,
+      'Date: ' + date,
+      'Time: ' + time,
+      '',
+      'Please confirm. Thank you.'
+    ].join('%0A');
+
+    window.open('https://wa.me/2348033489998?text=' + msg, '_blank');
+
+    document.getElementById('booking-form').style.display    = 'none';
+    document.getElementById('form-success').style.display    = 'block';
+
+    setTimeout(() => {
+      document.getElementById('booking-form').style.display  = 'flex';
+      document.getElementById('form-success').style.display  = 'none';
+      document.getElementById('booking-form').reset();
+    }, 6000);
+  }
+
+  /* ─── Scroll reveal ─── */
+  const revObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+</script>
+</body>
+</html>
